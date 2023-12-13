@@ -1,3 +1,15 @@
+# 0.0.5 (Wed Dec 13 2023)
+
+#### ⚠️ Pushed to `main`
+
+- Update github token ([@jdalrymple](https://github.com/jdalrymple))
+
+#### Authors: 1
+
+- Justin Dalrymple ([@jdalrymple](https://github.com/jdalrymple))
+
+---
+
 # 0.0.4 (Wed Dec 13 2023)
 
 #### 🔨 Technical Debt
