@@ -1,6 +1,10 @@
 // Deque is based on https://github.com/petkaantonov/deque/blob/master/js/deque.js
 // Released under the MIT License: https://github.com/petkaantonov/deque/blob/6ef4b6400ad3ba82853fdcc6531a38eb4f78c18c/LICENSE
 /*eslint-disable*/
+export const MIN_CAPACITY = 4;
+export const MAX_CAPACITY = 1073741824;
+export const RESIZE_MULTIPLER = 1;
+
 function arrayMove(src: any[], srcIndex: number, dst: any[], dstIndex: number, len: number) {
   for (let j = 0; j < len; ++j) {
     dst[j + dstIndex] = src[j + srcIndex];
@@ -19,10 +23,6 @@ function pow2AtLeast(n: number) {
 
   return n + 1;
 }
-
-export const MIN_CAPACITY = 4;
-export const MAX_CAPACITY = 1073741824;
-export const RESIZE_MULTIPLER = 1;
 
 export function getCapacity(capacity: number) {
   return pow2AtLeast(Math.min(Math.max(MIN_CAPACITY, capacity), MAX_CAPACITY));

@@ -1,25 +1,8 @@
-import { Sema } from '../src/index';
+import { Sema } from '../src/Sema';
 
-describe('General', () => {
-  test('Pausing works', () => {
-    const pauseFn = jest.fn();
-    const resumeFn = jest.fn();
-    const s = new Sema(5, { pauseFn, resumeFn });
-
-    for (let i = 0; i < 5; i += 1) {
-      // eslint-disable-next-line
-      s.acquire().catch(console.error);
-    }
-
-    expect(pauseFn).not.toHaveBeenCalled();
-    expect(resumeFn).not.toHaveBeenCalled();
-
-    // eslint-disable-next-line
-    s.acquire().catch(console.error);
-    expect(pauseFn).toHaveBeenCalled();
-    s.release();
-    s.release();
-    expect(resumeFn).toHaveBeenCalled();
+describe('Sema.constructor', () => {
+  it('should throw an error if a pauseFn is passed, but a resumeFn isnt', () => {
+    expect(() => new Sema(3, { pauseFn: () => 3 })).toThrow();
   });
 
   test('initFn is called properly', () => {
@@ -28,6 +11,17 @@ describe('General', () => {
 
     expect(s).toBeInstanceOf(Sema);
     expect(initFn).toHaveReturnedTimes(3);
+  });
+});
+
+describe('Sema.acquire', () => {
+  it('should aquire a sephamore', async () => {
+    const s = new Sema(1);
+
+    const token = await s.acquire();
+
+    expect(token).toBe('1');
+    expect(s.waiting()).toEqual(0);
   });
 
   test('Tokens are returned properly', async () => {
@@ -44,17 +38,6 @@ describe('General', () => {
     const tokens = await Promise.all([s.acquire(), s.acquire(), s.acquire()]);
 
     expect(tokens).toEqual(expect.arrayContaining([1, 2, 3]));
-  });
-});
-
-describe('Sema.acquire', () => {
-  it('should aquire a sephamore', async () => {
-    const s = new Sema(1);
-
-    const token = await s.acquire();
-
-    expect(token).toBe('1');
-    expect(s.waiting()).toEqual(0);
   });
 });
 
@@ -78,6 +61,59 @@ describe('Sema.release', () => {
 
     expect(s.tryAcquire()).toBeDefined();
     expect(s.tryAcquire()).toBeUndefined();
+  });
+
+  it('should use the release token value if an initFn is passed during instance creation', () => {
+    const s = new Sema(1, { initFn: () => 1 });
+
+    /* eslint-disable @typescript-eslint/ban-ts-comment, no-underscore-dangle */
+
+    // @ts-expect-error
+    const spy = jest.spyOn(s.releaseEmitter, 'emit');
+
+    /* eslint-enable */
+
+    expect(s.tryAcquire()).toBeDefined();
+
+    s.release(1);
+
+    expect(spy).toHaveBeenCalledWith('release', 1);
+  });
+
+  it('should use the default token value if an initFn is not passed during instance creation', () => {
+    const s = new Sema(1);
+
+    /* eslint-disable @typescript-eslint/ban-ts-comment, no-underscore-dangle */
+    // @ts-expect-error
+    const spy = jest.spyOn(s.releaseEmitter, 'emit');
+    /* eslint-enable */
+
+    expect(s.tryAcquire()).toBeDefined();
+
+    s.release();
+
+    expect(spy).toHaveBeenCalledWith('release', '1');
+  });
+
+  it('should execute the pause function once the limit is met', () => {
+    const pauseFn = jest.fn();
+    const resumeFn = jest.fn();
+    const s = new Sema(5, { pauseFn, resumeFn });
+
+    for (let i = 0; i < 5; i += 1) {
+      // eslint-disable-next-line
+      s.acquire().catch(console.error);
+    }
+
+    expect(pauseFn).not.toHaveBeenCalled();
+    expect(resumeFn).not.toHaveBeenCalled();
+
+    // eslint-disable-next-line
+    s.acquire().catch(console.error);
+    expect(pauseFn).toHaveBeenCalled();
+    s.release();
+    s.release();
+    expect(resumeFn).toHaveBeenCalled();
   });
 });
 
@@ -131,7 +167,7 @@ describe('Sema.waiting', () => {
     expect(s.waiting()).toEqual(0);
   });
 
-  it('should hanlde greater maxConcurrency', async () => {
+  it('should handle greater maxConcurrency', async () => {
     const s = new Sema(3);
 
     await s.acquire();
@@ -142,5 +178,18 @@ describe('Sema.waiting', () => {
 
     await s.acquire();
     expect(s.waiting()).toEqual(0);
+  });
+});
+
+describe('Sema.drain', () => {
+  it('should acquire the maxConcurrency of sephamores', async () => {
+    const s = new Sema(3);
+
+    const spy = jest.spyOn(s, 'acquire');
+
+    const all = await s.drain();
+
+    expect(all.length).toBe(3);
+    expect(spy).toHaveBeenCalledTimes(3);
   });
 });

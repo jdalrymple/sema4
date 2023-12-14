@@ -1,5 +1,4 @@
 import { Sema } from '../src/Sema';
-
 import { createRateLimiter } from '../src/Utils';
 
 jest.useFakeTimers();
@@ -78,5 +77,13 @@ describe('createRateLimiter', () => {
     await limiter();
 
     expect(acquireFn).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw an error if the rptu is not an integer', () => {
+    expect(() => createRateLimiter(0.5)).toThrow();
+  });
+
+  it('should throw an error if the rptu is negative', () => {
+    expect(() => createRateLimiter(-5)).toThrow();
   });
 });
