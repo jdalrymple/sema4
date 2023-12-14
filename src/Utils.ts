@@ -10,6 +10,12 @@ export function createRateLimiter(
     uniformDistribution?: boolean;
   } = {},
 ): () => Promise<void> {
+  if (!Number.isInteger(rptu) || rptu < 0) {
+    throw new TypeError(
+      'The rate-limit-per-time-unit (rptu) should be an integer and greater than zero',
+    );
+  }
+
   const sema = new Sema(uniformDistribution ? 1 : rptu);
   const delay = uniformDistribution ? timeUnit / rptu : timeUnit;
 

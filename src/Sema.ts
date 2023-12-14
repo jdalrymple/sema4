@@ -41,7 +41,7 @@ export class Sema<T = string> {
       capacity?: number;
     } = {},
   ) {
-    if (isFn(pauseFn) !== isFn(resumeFn)) {
+    if (isFn(pauseFn) && !isFn(resumeFn)) {
       throw new Error('pauseFn and resumeFn must be both set for pausing');
     }
 
