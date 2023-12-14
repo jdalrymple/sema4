@@ -1,3 +1,15 @@
+# 0.0.6 (Thu Dec 14 2023)
+
+#### 🔨 Technical Debt
+
+- Maintenance [#7](https://github.com/jdalrymple/sema4/pull/7) ([@jdalrymple](https://github.com/jdalrymple))
+
+#### Authors: 1
+
+- Justin Dalrymple ([@jdalrymple](https://github.com/jdalrymple))
+
+---
+
 # 0.0.5 (Wed Dec 13 2023)
 
 #### ⚠️ Pushed to `main`
