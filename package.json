@@ -1,11 +1,11 @@
 {
   "name": "sema4",
   "version": "0.0.6",
-  "description": "Semaphore using `async` and `await`",
+  "description": "Promise based Semaphores",
   "keywords": [
     "semaphore",
-    "async",
-    "await"
+    "promise",
+    "async"
   ],
   "homepage": "https://github.com/jdalrymple/sema4",
   "bugs": {
@@ -19,11 +19,17 @@
   "author": "Justin Dalrymple",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     }
   },
+  "types": "./index.d.ts",
   "files": [
     "dist"
   ],
@@ -56,18 +62,18 @@
     "@auto-it/omit-commits": "^11.0.4",
     "@auto-it/omit-release-notes": "^11.0.4",
     "@auto-it/released": "^11.0.4",
-    "@swc/core": "^1.3.100",
+    "@swc/core": "^1.3.101",
     "@swc/jest": "^0.2.29",
     "@types/jest": "^29.5.11",
-    "@types/node": "^20.10.4",
-    "@typescript-eslint/eslint-plugin": "^6.14.0",
-    "@typescript-eslint/parser": "^6.14.0",
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
     "auto": "^11.0.4",
-    "eslint": "^8.55.0",
+    "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^27.6.0",
     "eslint-plugin-prettier": "^5.0.1",
     "husky": ">=8.0.3",
