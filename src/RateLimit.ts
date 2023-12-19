@@ -5,7 +5,7 @@ export class RateLimit {
 
   private delay: number;
 
-  private timeouts: NodeJS.Timeout[] = [];
+  private timeouts: ReturnType<typeof setTimeout>[] = [];
 
   constructor(
     rate: number,
@@ -27,7 +27,7 @@ export class RateLimit {
     this.delay = uniformDistribution ? interval / rate : interval;
   }
 
-  async apply(): Promise<NodeJS.Timeout> {
+  async apply(): Promise<ReturnType<typeof setTimeout>> {
     await this.sema.acquire();
 
     const tm = setTimeout(() => this.sema.release(), this.delay);
