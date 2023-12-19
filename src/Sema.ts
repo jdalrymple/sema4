@@ -1,4 +1,4 @@
-import { EventEmitter } from 'node:events';
+import { EventEmitter } from 'events';
 import { Deque } from './Deque';
 
 const DEFAULT_INIT_VALUE = '1';
