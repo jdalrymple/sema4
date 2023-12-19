@@ -1,3 +1,15 @@
+# 0.1.2 (Tue Dec 19 2023)
+
+#### 🔨 Technical Debt
+
+- Fix npmrc config to not create duplicate tags [#12](https://github.com/jdalrymple/sema4/pull/12) ([@jdalrymple](https://github.com/jdalrymple))
+
+#### Authors: 1
+
+- Justin Dalrymple ([@jdalrymple](https://github.com/jdalrymple))
+
+---
+
 # 0.1.1 (Tue Dec 19 2023)
 
 #### 🔨 Technical Debt
