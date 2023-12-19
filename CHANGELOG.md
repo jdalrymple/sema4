@@ -1,3 +1,15 @@
+# 0.1.1 (Tue Dec 19 2023)
+
+#### 🔨 Technical Debt
+
+- Create RateLimit Class [#11](https://github.com/jdalrymple/sema4/pull/11) ([@jdalrymple](https://github.com/jdalrymple))
+
+#### Authors: 1
+
+- Justin Dalrymple ([@jdalrymple](https://github.com/jdalrymple))
+
+---
+
 # 0.1.0 (Tue Dec 19 2023)
 
 #### 🐛 Bug Fix
