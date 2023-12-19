@@ -80,7 +80,7 @@ jobs:
         with:
           name: build-artifacts
           path: dist
-      - name: Deploy
+      - name: Dry Run Deployment
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

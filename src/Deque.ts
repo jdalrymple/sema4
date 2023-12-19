@@ -5,10 +5,15 @@ export const MIN_CAPACITY = 4;
 export const MAX_CAPACITY = 1073741824;
 export const RESIZE_MULTIPLER = 1;
 
-function arrayMove(src: any[], srcIndex: number, dst: any[], dstIndex: number, len: number) {
-  for (let j = 0; j < len; ++j) {
-    dst[j + dstIndex] = src[j + srcIndex];
-    src[j + srcIndex] = void 0;
+export function arrayMove(
+  list: any[],
+  srcIndex: number,
+  dstIndex: number,
+  numberOfElements: number,
+) {
+  for (let j = 0; j < numberOfElements; ++j) {
+    list[j + dstIndex] = list[j + srcIndex];
+    list[j + srcIndex] = void 0;
   }
 }
 
@@ -60,9 +65,7 @@ export class Deque<T> {
   pop(): T | void {
     const length = this._length;
 
-    if (length === 0) {
-      return void 0;
-    }
+    if (length === 0) return;
 
     const i = (this._front + length - 1) & (this._capacity - 1);
     const ret = this.arr[i];
@@ -76,9 +79,7 @@ export class Deque<T> {
   shift() {
     const length = this._length;
 
-    if (length === 0) {
-      return void 0;
-    }
+    if (length === 0) return;
 
     const front = this._front;
     const ret = this.arr[front];
@@ -110,7 +111,7 @@ export class Deque<T> {
 
     if (front + length > oldCapacity) {
       const moveItemsCount = (front + length) & (oldCapacity - 1);
-      arrayMove(this.arr, 0, this.arr, oldCapacity, moveItemsCount);
+      arrayMove(this.arr, 0, oldCapacity, moveItemsCount);
     }
   }
 }

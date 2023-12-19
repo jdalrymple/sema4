@@ -1,4 +1,4 @@
-import { Sema, createRateLimiter } from '../src/index';
+import { RateLimit, Sema } from '../src/index';
 
 describe('Exports', () => {
   it('should export Sema', () => {
@@ -6,8 +6,8 @@ describe('Exports', () => {
     expect(Sema).toBeInstanceOf(Object);
   });
 
-  it('should export createRateLimiter helper function', () => {
-    expect(createRateLimiter).toBeDefined();
-    expect(createRateLimiter).toBeInstanceOf(Function);
+  it('should export RateLimit', () => {
+    expect(RateLimit).toBeDefined();
+    expect(RateLimit).toBeInstanceOf(Object);
   });
 });

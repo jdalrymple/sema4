@@ -109,15 +109,25 @@ Acquire a token from the semaphore, thus decrement the number of available execu
 
 Release the semaphore, thus increment the number of free execution slots. If `initFn` is used then the `token` returned by `acquire()` should be given as an argument when calling this function.
 
-#### `createRateLimiter(rptu, { timeUnit, uniformDistribution })`
+### Rate Limit
 
-Creates a rate limiter function that blocks with a promise whenever the rate limit is hit and resolves the promise once the call rate is within the limit.
+#### Constructor(rate, { interval, uniformDistribution })
+
+Creates a rate limit instance.
 
 | Name                          | Type    | Optional | Default | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | ----------------------------- | ------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rptu`                        | Integer | No       |         | Number of tasks allowed per `timeUnit`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `options.timeUnit`            | Integer | Yes      | 1000    | Defines the width of the rate limiting window in milliseconds                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `options.uniformDistribution` | Boolean | Yes      | False   | Enforces a discrete uniform distribution over time. Setting the `uniformDistribution` option is mainly useful in a situation where the flow of rate limit function calls is continuous and and occurring faster than `timeUnit` (e.g. reading a file) and not enabling it would cause the maximum number of calls to resolve immediately (thus exhaust the limit immediately) and therefore the next bunch of calls would need to wait for `timeUnit` milliseconds. However if the flow is sparse then this option may make the code run slower with no advantages. |
+| `rate`                        | Integer | No       |         | Number of tasks allowed per `interval`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `options.interval`            | Integer | Yes      | 1000    | Defines the width of the rate limiting window in milliseconds                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `options.uniformDistribution` | Boolean | Yes      | False   | Enforces a discrete uniform distribution over time. Setting the `uniformDistribution` option is mainly useful in a situation where the flow of rate limit function calls is continuous and and occurring faster than `interval` (e.g. reading a file) and not enabling it would cause the maximum number of calls to resolve immediately (thus exhaust the limit immediately) and therefore the next bunch of calls would need to wait for `interval` milliseconds. However if the flow is sparse then this option may make the code run slower with no advantages. |
+
+#### `async rateLimit.apply()`
+
+Acquires a semaphore and connects a timeout for its release. If the rate limit is reached, the execution process is halted until an available semaphore is released.
+
+#### `rateLimit.reset()`
+
+Releases all acquired semaphores immediately and resets the timeouts connected to them.
 
 ## Examples
 
@@ -151,10 +161,10 @@ function foo() {
 import { RateLimit } from 'sema4';
 
 async function bar() {
-  const lim = RateLimit(5); // Limit to 5 tasks per default timeUnit
+  const rl = new RateLimit(5); // Limit to 5 tasks per default time interval
 
   for (let i = 0; i < n; i++) {
-    await lim();
+    await rl.apply();
     // Perform some async tasks here...
   }
 }
