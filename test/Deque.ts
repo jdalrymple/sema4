@@ -1,8 +1,28 @@
-import { Deque, MAX_CAPACITY, getCapacity } from '../src/Deque';
+import { Deque, MAX_CAPACITY, arrayMove, getCapacity } from '../src/Deque';
 
 describe('MAX_CAPACITY', () => {
   it('should restrict max capacity to 1gb', () => {
     expect(MAX_CAPACITY).toBe(1073741824);
+  });
+});
+
+describe('arrayMove', () => {
+  it('should add to the list starting at the index dstIndex and from the list starting from srcIndex for a numberOfElements number of elements', () => {
+    const list = [1, 2, 3, 4];
+
+    arrayMove(list, 2, 0, 2);
+
+    expect(list).toHaveLength(4);
+    expect(list).toMatchObject([3, 4, undefined, undefined]);
+  });
+
+  it('should clear source array starting from srcIndex for a len number of elements', () => {
+    const list = [1, 2, 3, 4];
+
+    arrayMove(list, 0, 0, 2);
+
+    expect(list).toHaveLength(4);
+    expect(list).toMatchObject([undefined, undefined, 3, 4]);
   });
 });
 
