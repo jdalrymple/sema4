@@ -32,7 +32,7 @@
 
 - **Universal** - Works in all modern browsers, [Node.js](https://nodejs.org/), and [Deno](https://deno.land/) and supports [CLI](https://www.npmjs.com/package/@gitbeaker/cli) usage.
 - **Zero Dependencies** - Absolutely no dependencies, keeping the package tiny (24kb).
-- **Tested** - Greater than 85% test coverage.
+- **Tested** - Greater than 98% test coverage.
 - **Typed** - Out of the box TypeScript declarations.
 
 ## Usage
