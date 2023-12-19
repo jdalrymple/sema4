@@ -63,13 +63,14 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'skip ci')
     needs: [lint, format, build, test]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_TOKEN }}
+          fetch-tags: true
       - uses: ./.github/actions/setup
       - name: Retrieve saved build files
         uses: actions/download-artifact@v3
