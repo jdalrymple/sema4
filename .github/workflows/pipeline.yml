@@ -70,7 +70,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_TOKEN }}
-          fetch-tags: true
+          fetch-depth: 100
+      - name: Fetch Git tags
+        shell: bash
+        run: git fetch --tags --force
       - uses: ./.github/actions/setup
       - name: Retrieve saved build files
         uses: actions/download-artifact@v3
