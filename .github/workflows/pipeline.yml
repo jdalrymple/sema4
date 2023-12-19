@@ -61,6 +61,36 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
+  release-dry-run:
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    needs: [lint, format, build, test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          fetch-depth: 100
+      - name: Fetch Git tags
+        shell: bash
+        run: git fetch --tags --force
+      - uses: ./.github/actions/setup
+      - name: Retrieve saved build files
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: dist
+      - name: Deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GH_USERNAME: ${{ github.actor }}
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+          git config --global user.email "${GH_USERNAME}@users.noreply.github.com"
+          git config --global user.name "${GH_USERNAME}"
+          yarn release --dry-run
+
   release:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'skip ci')
