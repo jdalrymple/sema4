@@ -1,3 +1,20 @@
+# 0.1.0 (Tue Dec 19 2023)
+
+#### 🐛 Bug Fix
+
+- Add more restrictions before deloying, include fetch tags options [#9](https://github.com/jdalrymple/sema4/pull/9) ([@jdalrymple](https://github.com/jdalrymple))
+
+#### 🔨 Technical Debt
+
+- Perform fetch on tags [#10](https://github.com/jdalrymple/sema4/pull/10) ([@jdalrymple](https://github.com/jdalrymple))
+- Updating docs, type exports and deps [#8](https://github.com/jdalrymple/sema4/pull/8) ([@jdalrymple](https://github.com/jdalrymple))
+
+#### Authors: 1
+
+- Justin Dalrymple ([@jdalrymple](https://github.com/jdalrymple))
+
+---
+
 # 0.0.6 (Thu Dec 14 2023)
 
 #### 🔨 Technical Debt
