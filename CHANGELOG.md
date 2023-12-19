@@ -1,3 +1,15 @@
+# 0.1.3 (Tue Dec 19 2023)
+
+#### 🔨 Technical Debt
+
+- Use non-node types and generic events export [#13](https://github.com/jdalrymple/sema4/pull/13) ([@jdalrymple](https://github.com/jdalrymple))
+
+#### Authors: 1
+
+- Justin Dalrymple ([@jdalrymple](https://github.com/jdalrymple))
+
+---
+
 # 0.1.2 (Tue Dec 19 2023)
 
 #### 🔨 Technical Debt
