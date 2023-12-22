@@ -33,6 +33,23 @@ export function getCapacity(capacity: number) {
   return pow2AtLeast(Math.min(Math.max(MIN_CAPACITY, capacity), MAX_CAPACITY));
 }
 
+export function updateCapacity<T>(
+  oldCapacity: number,
+  backIndex: number,
+  list: Array<T | void>,
+): number {
+  const newCapacity = getCapacity(oldCapacity * RESIZE_MULTIPLER + MIN_CAPACITY);
+
+  // Resize
+  if (backIndex > oldCapacity) {
+    const moveItemsCount = backIndex & (oldCapacity - 1);
+
+    arrayMove(list, 0, oldCapacity, moveItemsCount);
+  }
+
+  return newCapacity;
+}
+
 export class Deque<T> {
   private _capacity: number;
 
@@ -50,16 +67,19 @@ export class Deque<T> {
   }
 
   push(item: T): number {
-    const length = this._length;
+    const backIndex = this._front + this._length;
 
-    this.checkCapacity(length + 1);
+    // Update capacity if needed
+    if (this._capacity < this._length + 1) {
+      this._capacity = updateCapacity(this._capacity, backIndex, this.arr);
+    }
 
-    const i = (this._front + length) & (this._capacity - 1);
+    const i = backIndex & (this._capacity - 1);
 
     this.arr[i] = item;
-    this._length = length + 1;
+    this._length += 1;
 
-    return length + 1;
+    return this._length;
   }
 
   pop(): T | void {
@@ -93,25 +113,5 @@ export class Deque<T> {
 
   get length(): number {
     return this._length;
-  }
-
-  private checkCapacity(size: number) {
-    if (this._capacity < size) {
-      this.resizeTo(getCapacity(this._capacity * RESIZE_MULTIPLER + MIN_CAPACITY));
-    }
-  }
-
-  private resizeTo(capacity: number) {
-    const oldCapacity = this._capacity;
-
-    this._capacity = capacity;
-
-    const front = this._front;
-    const length = this._length;
-
-    if (front + length > oldCapacity) {
-      const moveItemsCount = (front + length) & (oldCapacity - 1);
-      arrayMove(this.arr, 0, oldCapacity, moveItemsCount);
-    }
   }
 }

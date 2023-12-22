@@ -1,4 +1,12 @@
-import { Deque, MAX_CAPACITY, arrayMove, getCapacity } from '../src/Deque';
+import {
+  Deque,
+  MAX_CAPACITY,
+  MIN_CAPACITY,
+  RESIZE_MULTIPLER,
+  arrayMove,
+  getCapacity,
+  updateCapacity,
+} from '../src/Deque';
 
 describe('MAX_CAPACITY', () => {
   it('should restrict max capacity to 1gb', () => {
@@ -48,6 +56,24 @@ describe('getCapacity', () => {
 
     expect(d1).toBe(MAX_CAPACITY);
   });
+});
+
+describe('checkCapacity', () => {
+  it('should generate a new capacity based on the capacity passed, a RESIZE_MULTIPLER multiplier and the MIN_CAPACITY', () => {
+    const c = updateCapacity(2, 1, []);
+
+    expect(2 * RESIZE_MULTIPLER + MIN_CAPACITY).toBe(6);
+    expect(c).toBe(8);
+  });
+
+  // it('should resize list if backIndex is greater than the old capacity', () => {
+  //   const list = [undefined, undefined, undefined, undefined, 1, 2, 3, 4, 5];
+  //
+  //   updateCapacity(4, 8, list);
+  //
+  //   expect(list).toMatchObject([]);
+  //   expect(true).toBeFalsy();
+  // });
 });
 
 describe('Deque.constructor', () => {
@@ -128,6 +154,7 @@ describe('Deque.push', () => {
     d.push(1);
     d.push(1);
     d.push(1);
+
     const finalLength = d.push(1);
 
     expect(finalLength).toBe(5);
