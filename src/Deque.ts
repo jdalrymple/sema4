@@ -33,21 +33,21 @@ export function getCapacity(capacity: number) {
   return pow2AtLeast(Math.min(Math.max(MIN_CAPACITY, capacity), MAX_CAPACITY));
 }
 
-export function updateCapacity<T>(
-  oldCapacity: number,
-  backIndex: number,
-  list: Array<T | void>,
-): number {
-  const newCapacity = getCapacity(oldCapacity * RESIZE_MULTIPLER + MIN_CAPACITY);
-
+/**
+ * Resizes the buffer to a certain capacity.
+ *
+ * This function also makes the buffer contiguous,
+ *
+ * If the capacity is too small,
+ * then it will automatically be scaled up to the length of the buffer.
+ */
+export function resizeTo<T>(list: Array<T | void>, capacity: number, backIndex: number) {
   // Resize
-  if (backIndex > oldCapacity) {
-    const moveItemsCount = backIndex & (oldCapacity - 1);
+  if (backIndex <= capacity) return;
 
-    arrayMove(list, 0, oldCapacity, moveItemsCount);
-  }
+  const moveItemsCount = backIndex & (capacity - 1);
 
-  return newCapacity;
+  arrayMove(list, 0, capacity, moveItemsCount);
 }
 
 export class Deque<T> {
@@ -71,7 +71,11 @@ export class Deque<T> {
 
     // Update capacity if needed
     if (this._capacity < this._length + 1) {
-      this._capacity = updateCapacity(this._capacity, backIndex, this.arr);
+      const newCapacity = getCapacity(this._capacity * RESIZE_MULTIPLER + MIN_CAPACITY);
+
+      resizeTo(this.arr, this._capacity, backIndex);
+
+      this._capacity = newCapacity;
     }
 
     const i = backIndex & (this._capacity - 1);

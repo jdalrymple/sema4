@@ -5,7 +5,7 @@ import {
   RESIZE_MULTIPLER,
   arrayMove,
   getCapacity,
-  updateCapacity,
+  resizeTo,
 } from '../src/Deque';
 
 describe('MAX_CAPACITY', () => {
@@ -58,22 +58,33 @@ describe('getCapacity', () => {
   });
 });
 
-describe('checkCapacity', () => {
-  it('should generate a new capacity based on the capacity passed, a RESIZE_MULTIPLER multiplier and the MIN_CAPACITY', () => {
-    const c = updateCapacity(2, 1, []);
+describe('resizeTo', () => {
+  it('should not modify the list if the capcity is larger than the backIndex', () => {
+    const list = [1, 2, 3, 4];
+    const dup = [...list];
 
-    expect(2 * RESIZE_MULTIPLER + MIN_CAPACITY).toBe(6);
-    expect(c).toBe(8);
+    resizeTo(list, 4, 3);
+
+    expect(list).toMatchObject(dup);
   });
 
-  // it('should resize list if backIndex is greater than the old capacity', () => {
-  //   const list = [undefined, undefined, undefined, undefined, 1, 2, 3, 4, 5];
-  //
-  //   updateCapacity(4, 8, list);
-  //
-  //   expect(list).toMatchObject([]);
-  //   expect(true).toBeFalsy();
-  // });
+  it('should overwrite items at the end of the queue when the capcity is smaller than the backIndex', () => {
+    const list = [undefined, 1, 2, 3, 4];
+
+    resizeTo(list, 4, 5);
+
+    expect(list).toMatchObject([undefined, 1, 2, 3, undefined]);
+  });
+});
+
+describe('Constants', () => {
+  it('should have RESIZE_MULTIPLER set to 1', () => {
+    expect(RESIZE_MULTIPLER).toBe(1);
+  });
+
+  it('should expect MIN_CAPACITY to be 4', () => {
+    expect(MIN_CAPACITY).toBe(4);
+  });
 });
 
 describe('Deque.constructor', () => {
@@ -139,15 +150,26 @@ describe('Deque.constructor', () => {
 });
 
 describe('Deque.push', () => {
-  it('should accept an item to add to the queue and increment the length', () => {
+  it('should add single argument - plenty of capacity', () => {
     const d = new Deque();
+    /* eslint-disable @typescript-eslint/ban-ts-comment, no-underscore-dangle */
 
-    d.push(1);
+    // @ts-expect-error
+    expect(d._capacity).toBe(4);
 
-    expect(d.length).toBe(1);
+    // @ts-expect-error
+    expect(d._length).toBe(0);
+
+    const l = d.push(1);
+
+    // @ts-expect-error
+    expect(d._length).toBe(1);
+    expect(l).toBe(1);
+
+    /* eslint-enable */
   });
 
-  it('should update capacity if more than capacity items are added', () => {
+  it('should add single argument - exact capacity', () => {
     const d = new Deque();
 
     d.push(1);
@@ -159,6 +181,7 @@ describe('Deque.push', () => {
 
     expect(finalLength).toBe(5);
     expect(d.length).toBe(5);
+    expect(2 * RESIZE_MULTIPLER + MIN_CAPACITY).toBe(6);
 
     /* eslint-disable @typescript-eslint/ban-ts-comment, no-underscore-dangle */
 
@@ -167,6 +190,31 @@ describe('Deque.push', () => {
 
     // @ts-expect-error
     expect(d.arr).toMatchObject([1, 1, 1, 1, 1]);
+
+    /* eslint-enable */
+  });
+
+  it('should add single argument - over capacity', () => {
+    const d = new Deque();
+
+    d.push(1);
+    d.push(1);
+    d.push(1);
+    d.push(1);
+    d.push(1);
+
+    const finalLength = d.push(1);
+
+    expect(finalLength).toBe(6);
+    expect(d.length).toBe(6);
+
+    /* eslint-disable @typescript-eslint/ban-ts-comment, no-underscore-dangle */
+
+    // @ts-expect-error
+    expect(d._capacity).toBe(8);
+
+    // @ts-expect-error
+    expect(d.arr).toMatchObject([1, 1, 1, 1, 1, 1]);
 
     /* eslint-enable */
   });
